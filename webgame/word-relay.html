@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어 <span id="word"></span></div>
+    <input type="text" />
+    <button>입력</button>
+  </body>
+  <script>
+    const $order = document.querySelector("#order");
+    const $word = document.querySelector("#word");
+    const $input = document.querySelector("input");
+    const $button = document.querySelector("button");
+    const number = Number(prompt("몇 명이 참여합니까?", 0));
+    let word;
+    let inputWord;
+    let inputWords = [];
+
+    if (number) {
+      const onInput = (event) => {
+        inputWord = event.target.value;
+      };
+      const onClick = () => {
+        if (
+          inputWord.length == 3 &&
+          (!word || word[word.length - 1] == inputWord[0])
+        ) {
+          if (inputWords.includes(inputWord)) {
+            alert("이미 나온 단어입니다.");
+          } else {
+            word = inputWord;
+            $word.textContent = word;
+            const order = Number($order.textContent);
+            inputWords.push(inputWord);
+            if (order == number) {
+              $order.textContent = 1;
+            } else {
+              $order.textContent = order + 1;
+            }
+          }
+        } else {
+          alert("틀렸습니다.");
+        }
+        $input.value = "";
+        $input.focus();
+      };
+      $input.addEventListener("input", onInput);
+      $button.addEventListener("click", onClick);
+    }
+  </script>
+</html>

@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>숫자야구</title>
+  </head>
+  <body>
+    <form id="form">
+      <input type="text" id="input" />
+      <button>확인</button>
+    </form>
+    <div id="logs"></div>
+    <script>
+      const $input = document.querySelector('#input');
+      const $form = document.querySelector('#form');
+      const $logs = document.querySelector('#logs');
+      let out = 0;
+
+      // number 배열을 따로 만들지 않고 할 수 있는 방법을 찾아보자.
+      const numbers = Array(9)
+        .fill()
+        .map((v, i) => i + 1);
+
+      const answer = [];
+      for (let n = 0; n <= 3; n++) {
+        const index = Math.floor(Math.random() * numbers.length);
+        answer[n] = numbers[index];
+        numbers.splice(index, 1);
+      }
+      console.log(answer);
+      const tries = [];
+      function checkInput(input) {
+        if (input.length !== 4) {
+          return alert('4자리 숫자를 입력해주세요.');
+        }
+        if (new Set(input).size !== 4) {
+          return alert('중복되지 않게 입력해주세요.');
+        }
+        if (tries.includes(input)) {
+          alert('이미 중복된 값입니다.');
+        }
+        return true;
+      }
+      $form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const value = $input.value;
+        $input.value = '';
+        const valid = checkInput(value);
+        if (!valid) return;
+        if (answer.join('') === value) {
+          $logs.textContent = '홈런';
+          return;
+        }
+        if (tries.length > 9) {
+          const message = document.createTextNode(`패배! 정답은 ${answer.join('')}`);
+          $logs.appendChild(message);
+          return;
+        }
+        // 몇 스트라이크 몇 볼인지
+        let strike = 0;
+        let ball = 0;
+        answer.forEach((number, aindex) => {
+          const index = value.indexOf(String(number));
+          if (index > -1) {
+            // 일치하는 숫자 발견
+            if (index === aindex) {
+              strike += 1;
+            } else {
+              ball += 1;
+            }
+          }
+        });
+
+        if (strike === 0 && ball === 0) {
+          out += 1;
+          if (out === 3) {
+            const message = document.createTextNode(`삼진 아웃! 정답은 ${answer.join('')}`);
+            $logs.appendChild(message);
+            return;
+          }
+          $logs.append(`${out}아웃`, document.createElement('br'));
+        } else {
+          $logs.append(`${value}: ${strike} 스트라이크 ${ball} 볼`, document.createElement('br'));
+        }
+
+        tries.push(value);
+      });
+    </script>
+  </body>
+</html>
+<!-- 시간복잡도를 생각해서 짜야겠다... -->
