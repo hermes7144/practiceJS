@@ -26,7 +26,7 @@
       let turn = 'O';
 
       const checkWinnerAndDraw = (target) => {
-        const hasWinner = checkWinner(target);
+        const hasWinner = checkWinner(event.target);
         // 승자가 있으면
         if (hasWinner) {
           $result.textContent = `${turn}님이 승리`;
