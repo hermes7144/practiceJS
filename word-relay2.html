@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>끝말잇기</title>
+  </head>
+
+  <body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어: <span id="word"></span></div>
+    <input type="text" />
+    <button>입력</button>
+    <script>
+      const $input = document.querySelector('input');
+      const $button = document.querySelector('button');
+      const $word = document.querySelector('#word');
+      const $order = document.querySelector('#order');
+
+      let word = '';
+      let sequence = 1;
+      const number = Number(prompt('몇 명이 참가합니까?', 0));
+      function handleSubmit(e) {
+        e.preventDefault();
+        let input = $input.value;
+
+        if (input.length == 3 && (!word || word[word.length - 1] == input[0])) {
+          // 첫번째 사람이거나 단어가 올바른지 확인
+          word = input;
+          $word.textContent = word;
+          sequence += 1;
+          if (sequence > number) {
+            sequence = 1;
+          }
+          $order.textContent = sequence;
+        } else {
+          alert('틀렸습니다!');
+        }
+        $input.value = '';
+        $input.focus();
+      }
+      if (number) {
+        $button.addEventListener('click', handleSubmit);
+      }
+    </script>
+  </body>
+</html>

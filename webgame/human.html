@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="start-screen">
+      <input id="name-input" />
+      <input id="age-input" />
+      <button id="start">시작</button>
+    </form>
+  </body>
+  <script>
+    const $startScreen = document.querySelector('#start-screen');
+    class Human {
+      constructor(name, age) {
+        this.name = name;
+        this.age = age;
+      }
+
+      sayName() {
+        console.log(this.name);
+      }
+      sayAge() {
+        console.log(this.age);
+      }
+    }
+
+    class Developer extends Human {
+      constructor(name, age) {
+        super(name, age);
+      }
+
+      makeCss() {
+        console.log('do css');
+      }
+    }
+
+    class Programmer extends Human {
+      constructor(name, age, languages) {
+        super(name, age);
+        this.languages = languages;
+      }
+      writeCode() {
+        console.log(this.languages.join() + '(으)로 코딩해요.');
+      }
+    }
+    const programmer = new Programmer('제로초', 28, ['html', 'css', 'js']);
+    programmer.writeCode(); // html,css,js(으)로 코딩해요.
+
+    let developer = null;
+    $startScreen.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const name = event.target['name-input'].value;
+      const age = event.target['age-input'].value;
+      developer = new Developer(name, age);
+    });
+    co;
+  </script>
+</html>

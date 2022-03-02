@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>지뢰 찾기</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+      td {
+        border: 1px solid #bbb;
+        text-align: center;
+        line-height: 20px;
+        width: 20px;
+        height: 20px;
+        background: #888;
+      }
+      td.opened {
+        background: white;
+      }
+      td.flag {
+        background: red;
+      }
+      td.question {
+        background: orange;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table id="table">
+      <tbody></tbody>
+    </table>
+    <div id="result"></div>
+    <script>
+      const $tbody = document.querySelector('#table tbody');
+      const $result = document.querySelector('#result');
+      const row = 10;
+      const cell = 10;
+      const mine = 10;
+      let data;
+      const CODE = {
+        NORMAL: -1,
+        QUESTION: -2,
+        FLAG: -3,
+        QUESTION_MINE: -4,
+        FLAG_MINE: -5,
+        MINE: -6,
+        OPENED: 0, // 0 이상이면 모두 열린 칸
+      };
+      // 데이터 구현
+
+      function plantMine() {
+        const candidate = Array(row * cell)
+          .fill()
+          .map((arr, i) => {
+            return i;
+          });
+        const shuffle = [];
+        while (candidate.length > row * cell - mine) {
+          const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0];
+          shuffle.push(chosen);
+        }
+        const data = [];
+        for (let i = 0; i < row; i++) {
+          const rowData = [];
+          for (let j = 0; j < cell; j++) {
+            rowData.push(CODE.NORMAL);
+          }
+          data.push(rowData);
+        }
+
+        for (let k = 0; k < shuffle.length; k++) {
+          console.log(shuffle[k]);
+
+          const ver = Math.floor(shuffle[k] / cell);
+          const hor = shuffle[k] % cell;
+          data[ver][hor] = CODE.MINE;
+        }
+        return data;
+      }
+      plantMine();
+    </script>
+  </body>
+</html>
