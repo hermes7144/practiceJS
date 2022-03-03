@@ -19,9 +19,94 @@
 
   <body>
     <script>
-      // 변수 선언
-      // 데이터를 그리기
-      //
+      // 표 직접 그리기
+      let turn = 'O';
+      const { body } = document;
+      const $table = document.createElement('table');
+      const $result = document.createElement('div'); // 결과창
+      // 줄을 담당하는 row 배열 td 태그 3x3 모양으로 배열 추가
+      const rows = [];
+
+      const checkWinner = (target) => {
+        const rowIndex = target.parentNode.rowIndex;
+        const cellIndex = target.cellIndex;
+
+        // 세칸 다 채워졌나?'
+        let hasWinner = false;
+        // 가로줄 검사
+        if (rows[rowIndex][0].textContent === turn && rows[rowIndex][1].textContent === turn && rows[rowIndex][2].textContent === turn) {
+          hasWinner = true;
+        }
+        // 세로줄 검사
+        if (rows[0][cellIndex].textContent === turn && rows[1][cellIndex].textContent === turn && rows[2][cellIndex].textContent === turn) {
+          hasWinner = true;
+        }
+        // 대각선 검사
+        if (rows[0][0].textContent === turn && rows[1][1].textContent === turn && rows[2][2].textContent === turn) {
+          hasWinner = true;
+        }
+        if (rows[0][2].textContent === turn && rows[1][1].textContent === turn && rows[2][0].textContent === turn) {
+          hasWinner = true;
+        }
+        return hasWinner;
+      };
+
+      const checkWinnerAndDraw = (target) => {
+        const hasWinner = checkWinner(target);
+        // 승자가 있으면
+        if (hasWinner) {
+          $result.textContent = `${turn}님이 승리`;
+          $table.removeEventListener('click', callback);
+          return;
+        }
+        let draw = rows.flat().every((cell) => cell.textContent);
+        if (draw) {
+          $result.textContent = '무승부';
+          return;
+        }
+        // 승자가 없으면
+        turn = turn === 'X' ? 'O' : 'X';
+      };
+
+      let clickable = true;
+      const callback = (event) => {
+        if (!clickable) {
+          return;
+        }
+        // 칸에 글자가 있나
+        if (event.target.textContent !== '') {
+          return;
+        }
+        // 빈칸이면
+        event.target.textContent = turn;
+        checkWinnerAndDraw(event.target);
+        // draw
+
+        if (turn === 'X') {
+          const emptyCell = rows.flat().filter((v) => !v.textContent);
+          clickable = false;
+          const listIndex = emptyCell[Math.floor(Math.random() * emptyCell.length)];
+          setTimeout(() => {
+            listIndex.textContent = 'X';
+            checkWinnerAndDraw(listIndex);
+            clickable = true;
+          }, 1000);
+        }
+      };
+      for (let i = 0; i < 3; i++) {
+        const $tr = document.createElement('tr');
+        const cells = [];
+        for (let j = 0; j < 3; j++) {
+          const $td = document.createElement('td');
+          cells.push($td);
+          $tr.appendChild($td);
+        }
+        rows.push(cells);
+        $table.appendChild($tr);
+        $table.addEventListener('click', callback);
+      }
+      body.appendChild($table);
+      body.appendChild($result);
     </script>
   </body>
 </html>
